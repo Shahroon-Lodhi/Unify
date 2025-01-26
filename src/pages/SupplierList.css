@@ -1,0 +1,100 @@
+.search-bar {
+    margin: 20px 0;
+    position: relative;
+  }
+  
+  .search-bar input {
+    width: 15%;
+    padding: 10px;
+    padding-left: 10px; 
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+  }
+  
+  .search-bar input::placeholder {
+    font-style: italic;
+    color: #999;
+  }
+  
+  .search-bar input:focus {
+    border-color: #ff7f00;
+    box-shadow: 0 0 5px rgba(255, 127, 0, 0.5);
+  }
+.add-product-list {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header h2 {
+    margin: 0;
+  }
+  
+  .header p {
+    margin: 0;
+    color: gray;
+  }
+  
+  .add-buttonn {
+    background-color: #ff7f00;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .add-buttonn:hover {
+    background-color: #e06600;
+  }
+
+  .table-container {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table th, table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  table th {
+    background-color: #f9f9f9;
+  }
+  
+  table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .action-icon {
+    margin: 0 5px;
+    cursor: pointer;
+  }
+  
+  .action-icon.view-icon {
+    color: #007bff;
+  }
+  
+  .action-icon.edit-icon {
+    color: #28a745;
+  }
+  
+  .action-icon.delete-icon {
+    color: #dc3545;
+  }
+  

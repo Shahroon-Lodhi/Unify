@@ -1,0 +1,47 @@
+.add-category {
+    margin-left: 260px;
+    padding: 20px;
+    background: #f9f9f9;
+    height: 100vh;
+  }
+  
+  .add-category h2 {
+    margin-bottom: 20px;
+    color: #34495e;
+  }
+  
+  form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  form label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #34495e;
+  }
+  
+  form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+  }
+  
+  form button {
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  form button:hover {
+    background: #34495e;
+  }
+  

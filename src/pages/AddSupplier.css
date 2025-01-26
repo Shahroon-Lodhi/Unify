@@ -1,0 +1,112 @@
+.add-product {
+    margin-left: 260px;
+    padding: 20px;
+    background: #f9f9f9;
+    height: 100vh;
+  }
+  
+  .add-product h2 {
+    margin-bottom: 20px;
+    color: #34495e;
+  }
+  .SKU {
+    margin-left: 260px;
+    padding: 20px;
+    background: #f9f9f9;
+    height: 100vh;
+  }
+  
+  .SKU h2 {
+    margin-bottom: 20px;
+    color: #34495e;
+  }
+  
+  form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  form label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #34495e;
+  }
+  
+  form input,
+  form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #34495e;
+    background: #fff;
+  }
+  .file-upload-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 2px dashed #dcdcdc;
+    border-radius: 8px;
+    background: #fafafa;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .file-upload-box:hover {
+    background: #f0f8ff;
+    border-color: #34495e;
+  }
+  
+  .file-upload-box span {
+    color: #888;
+    font-size: 0.9rem;
+  }
+  
+  .file-upload-box .file-name {
+    color: #34495e;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  .hidden-file-input {
+    display: none;
+  }
+  
+  /* Dropdown-specific styling */
+  form select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 10 10'><path fill='gray' d='M0 0l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    background-color: #fff;
+  }
+  
+  /* Placeholder style for the default option */
+  form select:invalid {
+    color: #888;
+  }
+  
+  form button {
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  form button:hover {
+    background: #34495e;
+  }
+  

@@ -1,0 +1,136 @@
+.import-products {
+    padding: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .import-products h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  
+  .subtitle {
+    color: #666;
+    margin-bottom: 24px;
+  }
+  
+  .card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .csv-text {
+    color: #666;
+    margin-bottom: 16px;
+  }
+  
+  .download-btn {
+    background: #ff9f43;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 24px;
+  }
+  
+  .download-btn:hover {
+    background: #f89436;
+  }
+  
+  .upload-section {
+    margin-bottom: 24px;
+  }
+  
+  .upload-title {
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  
+  .drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s;
+  }
+  
+  .drop-zone:hover {
+    border-color: #ff9f43;
+  }
+  
+  .upload-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .field-name {
+    font-weight: 500;
+  }
+  
+  .required-text {
+    color: #2ecc71;
+  }
+  
+  .optional-text {
+    color: #3498db;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+  }
+  
+  .cancel-btn {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .cancel-btn:hover {
+    background: #f5f5f5;
+  }
+  
+  .submit-btn {
+    padding: 10px 20px;
+    background: #ff9f43;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .submit-btn:hover {
+    background: #f89436;
+  }
+  
+  .submit-btn.disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
