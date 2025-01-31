@@ -1,30 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ProductList.css";
 
 function ProductList() {
   const navigate = useNavigate();
-
-  // Initial Product List Data
-  const [products, setProducts] = useState([
-    { id: 1, name: "MacBook Pro", sku: "PT001", category: "Computers", brand: "N/D", price: 1500.0, unit: "pc", qty: 100.0, createdBy: "Admin" },
-    { id: 2, name: "Orange", sku: "PT002", category: "Fruits", brand: "N/D", price: 10.0, unit: "pc", qty: 100.0, createdBy: "Admin" },
-    { id: 3, name: "Pineapple", sku: "PT003", category: "Fruits", brand: "N/D", price: 10.0, unit: "pc", qty: 100.0, createdBy: "Admin" },
-    { id: 4, name: "Strawberry", sku: "PT004", category: "Fruits", brand: "N/D", price: 10.0, unit: "pc", qty: 100.0, createdBy: "Admin" },
-    { id: 5, name: "Avocado", sku: "PT005", category: "Accessories", brand: "N/D", price: 10.0, unit: "pc", qty: 150.0, createdBy: "Admin" },
-    { id: 6, name: "MacBook Pro (Second)", sku: "PT006", category: "Shoes", brand: "N/D", price: 10.0, unit: "pc", qty: 100.0, createdBy: "Admin" },
-  ]);
-
+  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-  // Filtered and Sorted Products
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Fetch products from Strapi
+  useEffect(() => {
+    fetch("http://localhost:1337/api/products")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched data:", data);
+        const productData = data.data.map((item) => ({
+          id: item.id,
+          ...item, // Include all product attributes directly
+        }));
+        console.log("Formatted product data:", productData);
+        setProducts(productData);
+      })
+      .catch((error) => console.error("Error fetching products:", error));
+  }, []);
+
+  // Filter and Sort Products
+  const filteredProducts = products.filter((product) => {
+    return (
+      product.Product_Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.Product_SKU?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.Category?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (!sortConfig.key) return 0;
@@ -68,29 +75,29 @@ function ProductList() {
           <thead>
             <tr>
               <th><input type="checkbox" /></th>
-              <th onClick={() => sortData("name")}>
-                Product Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("Product_ID")}>
+                Product ID {sortConfig.key === "Product_ID" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("sku")}>
-                SKU {sortConfig.key === "sku" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("Product_Name")}>
+                Product Name {sortConfig.key === "Product_Name" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("category")}>
-                Category {sortConfig.key === "category" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("Product_SKU")}>
+                SKU {sortConfig.key === "Product_SKU" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("brand")}>
-                Brand {sortConfig.key === "brand" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("Category")}>
+                Category {sortConfig.key === "Category" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("price")}>
-                Price {sortConfig.key === "price" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("HS_Code")}>
+                HS Code {sortConfig.key === "HS_Code" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("unit")}>
-                Unit {sortConfig.key === "unit" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("Cost_Price")}>
+                Cost Price {sortConfig.key === "Cost_Price" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("qty")}>
-                Quantity {sortConfig.key === "qty" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("Selling_Price")}>
+                Selling Price {sortConfig.key === "Selling_Price" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("createdBy")}>
-                Created By {sortConfig.key === "createdBy" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("Stock_Quantity")}>
+                Stock Quantity {sortConfig.key === "Stock_Quantity" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
               <th>Action</th>
             </tr>
@@ -99,14 +106,14 @@ function ProductList() {
             {sortedProducts.map((product) => (
               <tr key={product.id}>
                 <td><input type="checkbox" /></td>
-                <td>{product.name}</td>
-                <td>{product.sku}</td>
-                <td>{product.category}</td>
-                <td>{product.brand}</td>
-                <td>{product.price.toFixed(2)}</td>
-                <td>{product.unit}</td>
-                <td>{product.qty.toFixed(2)}</td>
-                <td>{product.createdBy}</td>
+                <td>{product.Product_ID || "N/A"}</td>
+                <td>{product.Product_Name || "N/A"}</td>
+                <td>{product.Product_SKU || "N/A"}</td>
+                <td>{product.Category || "N/A"}</td>
+                <td>{product.HS_Code || "N/A"}</td>
+                <td>${product.Cost_Price?.toFixed(2) || "N/A"}</td>
+                <td>${product.Selling_Price?.toFixed(2) || "N/A"}</td>
+                <td>{product.Stock_Quantity || "N/A"}</td>
                 <td>
                   <span className="action-icon view-iconn">👁️</span>
                   <span className="action-icon edit-iconn">✏️</span>

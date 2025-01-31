@@ -1,89 +1,62 @@
 import React, { useState } from 'react';
+import TextInput from '../components/TextInput'; 
+import Dropdown from '../components/Dropdown'; 
 import './AddSubCategory.css';
 
 const AddSubCategory = () => {
-  const [ParentCategory, setParentCategory] = useState('');
+  const [parentCategory, setParentCategory] = useState('');
   const [categoryName, setCategoryName] = useState('');
   const [categoryCode, setCategoryCode] = useState('');
-  const [Description, setDescription] = useState('');
-  const [SubImage, setSubImage] = useState(null);
-    
-  
-    const handleImageChange = (e) => {
-      setSubImage(e.target.files[0]);
-    };
-    const handleBoxClick = () => {
-      document.getElementById('productImage').click();
-    };
+  const [description, setDescription] = useState('');
+  const [subImage, setSubImage] = useState(null);
 
+  const handleImageChange = (e) => {
+    setSubImage(e.target.files[0]);
+  };
+
+  const handleBoxClick = () => {
+    document.getElementById('subImage').click();
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ SubImage, ParentCategory, categoryName, categoryCode, Description });
-    // Handle form submission (e.g., API call)
+    console.log({ subImage, parentCategory, categoryName, categoryCode, description });
   };
 
   return (
     <div className="add-category">
-      <h2>Product Add sub Category</h2>
-      <p> Create new product Category</p>
+      <h2>Product Add Subcategory</h2>
+      <p>Create a new product subcategory</p>
       <form onSubmit={handleSubmit}>
-      <label>
-          Parent Category:
-          <select
-            value={ParentCategory}
-            onChange={(e) => setParentCategory(e.target.value)}
-            required
-            className="dropdown"
-          >
-            <option value="" disabled>
-              Choose Category
-            </option>
-            <option value="Electronics">Electronics</option>
-            <option value="Clothing">Clothing</option>
-            <option value="Books">Books</option>
-            <option value="Home">Home</option>
-          </select>
-        </label>
+        {/* Using Dropdown component */}
+        <Dropdown
+          label="Parent Category"
+          value={parentCategory}
+          onChange={(e) => setParentCategory(e.target.value)}
+          options={["Electronics", "Clothing", "Books", "Home"]}
+          required
+        />
+
+        {/* Using TextInput component */}
+        <TextInput label="Category Name" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} required />
+        <TextInput label="Category Code" value={categoryCode} onChange={(e) => setCategoryCode(e.target.value)} required />
+        <TextInput label="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+
+        {/* File Upload */}
         <label>
-          Category Name:
-          <input
-            type="text"
-            value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
-            required
-          />
+          <div className="file-upload-box" onClick={handleBoxClick}>
+            <span>Click to upload product image or drag and drop</span>
+            {subImage && <div className="file-name">{subImage.name}</div>}
+            <input
+              id="subImage"
+              type="file"
+              className="hidden-file-input"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </div>
         </label>
-        <label>
-          Category code:
-          <input
-            type="text"
-            value={categoryCode}
-            onChange={(e) => setCategoryCode(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Description:
-          <input
-            type="text"
-            value={Description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </label>
-        <label>
-        <div className="file-upload-box" onClick={handleBoxClick}>
-          <span>Click to upload product image or drag and drop</span>
-          {SubImage && <div className="file-name">{SubImage.name}</div>}
-          <input
-            id="SubImage"
-            type="file"
-            className="hidden-file-input"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-        </div>
-        </label>
+
         <button type="submit">Add Category</button>
       </form>
     </div>

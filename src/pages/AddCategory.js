@@ -1,48 +1,26 @@
 import React, { useState } from 'react';
+import TextInput from '../components/TextInput'; // Reusing your existing component
 import './AddCategory.css';
 
 const AddCategory = () => {
   const [categoryName, setCategoryName] = useState('');
   const [categoryCode, setCategoryCode] = useState('');
-  const [Description, setDescription] = useState('');
-
+  const [description, setDescription] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ categoryName, categoryCode, Description });
-    // Handle form submission (e.g., API call)
+    console.log({ categoryName, categoryCode, description });
   };
 
   return (
     <div className="add-category">
       <h2>Add Category</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          Category Name:
-          <input
-            type="text"
-            value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Category code:
-          <input
-            type="text"
-            value={categoryCode}
-            onChange={(e) => setCategoryCode(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Description:
-          <input
-            type="text"
-            value={Description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </label>
+        {/* Using TextInput component */}
+        <TextInput label="Category Name" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} required />
+        <TextInput label="Category Code" value={categoryCode} onChange={(e) => setCategoryCode(e.target.value)} required />
+        <TextInput label="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+
         <button type="submit">Add Category</button>
       </form>
     </div>
