@@ -1,31 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SupplierList.css";
 
 function SupplierList() {
   const navigate = useNavigate();
-
-  // Initial Supplier List Data
-  const [supplierList, setSupplierList] = useState([
-    { id: 1, name: "ABC Computers", Code: "S001", Phone: "030048597", Email: "example@gmail.com", Country: "Pakistan" },
-    { id: 2, name: "XYZ Computers", Code: "S002", Phone: "030048596", Email: "example@gmail.com", Country: "Saudia" },
-    { id: 3, name: "Tech Electronics", Code: "S003", Phone: "030048595", Email: "example@gmail.com", Country: "Bhutan" },
-    { id: 4, name: "Mega Suppliers", Code: "S004", Phone: "030048594", Email: "example@gmail.com", Country: "Pakistan" },
-    { id: 5, name: "Global Traders", Code: "S005", Phone: "030048593", Email: "example@gmail.com", Country: "Pakistan" },
-    { id: 6, name: "Market Supplies", Code: "S006", Phone: "030048592", Email: "example@gmail.com", Country: "Pakistan" },
-  ]);
-
+  const [supplierList, setSupplierList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const response = await fetch("http://localhost:1337/api/suppliers");
+        const result = await response.json();
+
+        if (result.data && Array.isArray(result.data)) {
+          setSupplierList(
+            result.data.map((supplier) => ({
+              id: supplier.id,
+              name: supplier.Supplier_Name || "N/A",
+              phone: supplier.Contact_Number || "N/A",
+              email: supplier.Supplier_Email || "N/A",
+              country: supplier.Country || "N/A",
+              city: supplier.City || "N/A",
+              zipCode: supplier.ZipCode || "N/A",
+            }))
+          );
+        } else {
+          console.error("Unexpected API response format:", result);
+        }
+      } catch (error) {
+        console.error("Error fetching suppliers:", error);
+      }
+    };
+
+    fetchSuppliers();
+  }, []);
 
   // Filtered and Sorted Suppliers
   const filteredSupplierList = supplierList.filter(
     (supplier) =>
       supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      supplier.Code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      supplier.Phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      supplier.Email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      supplier.Country.toLowerCase().includes(searchTerm.toLowerCase())
+      supplier.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      supplier.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      supplier.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      supplier.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      supplier.zipCode.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedSupplierList = [...filteredSupplierList].sort((a, b) => {
@@ -73,37 +93,47 @@ function SupplierList() {
               <th onClick={() => sortData("name")}>
                 Supplier Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("Code")}>
-                Supplier Code {sortConfig.key === "Code" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("phone")}>
+                Phone {sortConfig.key === "phone" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("Phone")}>
-                Phone {sortConfig.key === "Phone" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("email")}>
+                Email {sortConfig.key === "email" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("Email")}>
-                Email {sortConfig.key === "Email" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("country")}>
+                Country {sortConfig.key === "country" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("Country")}>
-                Country {sortConfig.key === "Country" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("city")}>
+                City {sortConfig.key === "city" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              </th>
+              <th onClick={() => sortData("zipCode")}>
+                Zip Code {sortConfig.key === "zipCode" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {sortedSupplierList.map((supplier) => (
-              <tr key={supplier.id}>
-                <td><input type="checkbox" /></td>
-                <td>{supplier.name}</td>
-                <td>{supplier.Code}</td>
-                <td>{supplier.Phone}</td>
-                <td>{supplier.Email}</td>
-                <td>{supplier.Country}</td>
-                <td>
-                  <span className="action-icon view-icon">👁️</span>
-                  <span className="action-icon edit-icon">✏️</span>
-                  <span className="action-icon delete-icon">🗑️</span>
-                </td>
+            {sortedSupplierList.length > 0 ? (
+              sortedSupplierList.map((supplier) => (
+                <tr key={supplier.id}>
+                  <td><input type="checkbox" /></td>
+                  <td>{supplier.name}</td>
+                  <td>{supplier.phone}</td>
+                  <td>{supplier.email}</td>
+                  <td>{supplier.country}</td>
+                  <td>{supplier.city}</td>
+                  <td>{supplier.zipCode}</td>
+                  <td>
+                    <span className="action-icon view-icon">👁️</span>
+                    <span className="action-icon edit-icon">✏️</span>
+                    <span className="action-icon delete-icon">🗑️</span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="8" style={{ textAlign: "center", padding: "10px" }}>No suppliers found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

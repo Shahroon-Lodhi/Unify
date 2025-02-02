@@ -1,29 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./CategoryList.css";
 
 function CategoryList() {
   const navigate = useNavigate();
-
-  // Initial Category List Data
-  const [categories, setCategories] = useState([
-    { id: 1, name: "Computers", CategoryCode: "CT001", Description: "Laptop", createdBy: "Admin" },
-    { id: 2, name: "Fruits", CategoryCode: "CT002", Description: "Fresh fruits", createdBy: "Admin" },
-    { id: 3, name: "Vegetables", CategoryCode: "CT003", Description: "Organic vegetables", createdBy: "Admin" },
-    { id: 4, name: "Furniture", CategoryCode: "CT004", Description: "Home furniture", createdBy: "Admin" },
-    { id: 5, name: "Electronics", CategoryCode: "CT005", Description: "Gadgets and devices", createdBy: "Admin" },
-    { id: 6, name: "Accessories", CategoryCode: "CT006", Description: "Fashion accessories", createdBy: "Admin" },
-  ]);
-
+  const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
+  // Fetch categories from Strapi when component mounts
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("http://localhost:1337/api/categories");
+        console.log("API Response:", response.data); // Check the full response
+        setCategories(response.data.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+  
+    fetchCategories();
+  }, []);
 
   // Filtered and Sorted Categories
   const filteredCategories = categories.filter(
     (category) =>
       category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      category.CategoryCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      category.Description.toLowerCase().includes(searchTerm.toLowerCase())
+      category.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      category.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedCategories = [...filteredCategories].sort((a, b) => {
@@ -33,7 +39,6 @@ function CategoryList() {
     return 0;
   });
 
-  // Sorting Functionality
   const sortData = (key) => {
     setSortConfig((prev) => {
       const direction = prev.key === key && prev.direction === "asc" ? "desc" : "asc";
@@ -48,7 +53,7 @@ function CategoryList() {
           <h2>Product Category List</h2>
           <p>View/Manage your product Categories</p>
         </div>
-        <button className="add-buttonn" onClick={() => navigate("/Categories")}>
+        <button className="add-buttonn" onClick={() => navigate("/Categories")}> 
           + Add New Category
         </button>
       </div>
@@ -71,14 +76,11 @@ function CategoryList() {
               <th onClick={() => sortData("name")}>
                 Category Name {sortConfig.key === "name" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("CategoryCode")}>
-                Category Code {sortConfig.key === "CategoryCode" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("slug")}>
+                Slug {sortConfig.key === "slug" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
-              <th onClick={() => sortData("Description")}>
-                Description {sortConfig.key === "Description" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
-              </th>
-              <th onClick={() => sortData("createdBy")}>
-                Created By {sortConfig.key === "createdBy" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+              <th onClick={() => sortData("description")}>
+                Description {sortConfig.key === "description" && (sortConfig.direction === "asc" ? "🔼" : "🔽")}
               </th>
               <th>Action</th>
             </tr>
@@ -88,9 +90,8 @@ function CategoryList() {
               <tr key={category.id}>
                 <td><input type="checkbox" /></td>
                 <td>{category.name}</td>
-                <td>{category.CategoryCode}</td>
-                <td>{category.Description}</td>
-                <td>{category.createdBy}</td>
+                <td>{category.slug}</td>
+                <td>{category.description}</td>
                 <td>
                   <span className="action-icon view-iconn">👁️</span>
                   <span className="action-icon edit-iconn">✏️</span>

@@ -1,16 +1,32 @@
-import React, { useState } from 'react';
-import './AddProduct.css';
-import TextInput from '../components/TextInput';
-import Dropdown from '../components/Dropdown';
+import React, { useState, useEffect } from "react";
+import "./AddProduct.css";
+import TextInput from "../components/TextInput";
+import Dropdown from "../components/Dropdown";
 
 const AddProduct = () => {
-  const [productName, setProductName] = useState('');
-  const [productSKU, setProductSKU] = useState('');
-  const [category, setCategory] = useState('');
-  const [hsCode, setHsCode] = useState('');
-  const [costPrice, setCostPrice] = useState('');
-  const [sellingPrice, setSellingPrice] = useState('');
-  const [stockQuantity, setStockQuantity] = useState('');
+  const [productName, setProductName] = useState("");
+  const [productSKU, setProductSKU] = useState("");
+  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]); // Store fetched categories
+  const [hsCode, setHsCode] = useState("");
+  const [costPrice, setCostPrice] = useState("");
+  const [sellingPrice, setSellingPrice] = useState("");
+  const [stockQuantity, setStockQuantity] = useState("");
+
+  // Fetch categories from Strapi
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:1337/api/categories");
+        const data = await response.json();
+        setCategories(data.data.map((cat) => cat.name)); // Extract category names
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +40,7 @@ const AddProduct = () => {
         Cost_Price: parseFloat(costPrice),
         Selling_Price: parseFloat(sellingPrice),
         Stock_Quantity: parseInt(stockQuantity),
-      }
+      },
     };
 
     try {
@@ -45,15 +61,14 @@ const AddProduct = () => {
 
       alert("✅ Product added successfully!");
 
-      // Reset form after successful submission
-      setProductName('');
-      setProductSKU('');
-      setCategory('');
-      setHsCode('');
-      setCostPrice('');
-      setSellingPrice('');
-      setStockQuantity('');
-
+      // Reset form
+      setProductName("");
+      setProductSKU("");
+      setCategory("");
+      setHsCode("");
+      setCostPrice("");
+      setSellingPrice("");
+      setStockQuantity("");
     } catch (error) {
       console.error("Error adding product:", error);
       alert("❌ Error adding product. Please try again.");
@@ -66,7 +81,7 @@ const AddProduct = () => {
       <form onSubmit={handleSubmit}>
         <TextInput label="Product Name" value={productName} onChange={(e) => setProductName(e.target.value)} required />
         <TextInput label="Product SKU" value={productSKU} onChange={(e) => setProductSKU(e.target.value)} required />
-        <Dropdown label="Category" value={category} onChange={(e) => setCategory(e.target.value)} required options={["Electronics", "Clothing", "Books", "Home"]} />
+        <Dropdown label="Category" value={category} onChange={(e) => setCategory(e.target.value)} required options={categories} />
         <TextInput label="HS Code" value={hsCode} onChange={(e) => setHsCode(e.target.value)} required />
         <TextInput label="Cost Price" type="number" value={costPrice} onChange={(e) => setCostPrice(e.target.value)} required />
         <TextInput label="Selling Price" type="number" value={sellingPrice} onChange={(e) => setSellingPrice(e.target.value)} required />
