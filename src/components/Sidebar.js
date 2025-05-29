@@ -7,6 +7,9 @@ function Sidebar() {
   const [isProductOpen, setIsProductOpen] = useState(false);
   const [isPeopleOpen, setIsPeopleOpen] = useState(false);
   const [isQuotationOpen, setIsQuotationOpen] = useState(false);
+  const [isOrdersOpen, setIsOrdersOpen] = useState(false);
+  const [isIntegrationOpen, setIsIntegrationOpen] = useState(false);
+  const [isFacebookOpen, setIsFacebookOpen] = useState(false);
 
   return (
     <div className="sidebar">
@@ -14,7 +17,7 @@ function Sidebar() {
       {/* Dashboard Link */}
       <ul className="sidebar-menu">
         <li>
-          <NavLink to="/" activeClassName="active-link">
+          <NavLink to="/dashboard" activeClassName="active-link">
             Dashboard
           </NavLink>
         </li>
@@ -77,6 +80,54 @@ function Sidebar() {
           </ul>
         )}
       </div>
+
+      {/* Orders Dropdown */}
+      <div className="dropdown">
+        <div
+          className="dropdown-header"
+          onClick={() => setIsOrdersOpen(!isOrdersOpen)}
+        >
+          <span>Orders</span>
+          <span>{isOrdersOpen ? '-' : '+'}</span>
+        </div>
+        {isOrdersOpen && (
+          <ul className="dropdown-menu">
+            <li><NavLink to="/Orders">Orders</NavLink></li>
+          </ul>
+        )}
+      </div>
+
+      <div className="dropdown">
+        <div
+          className="dropdown-header"
+          onClick={() => setIsFacebookOpen(!isFacebookOpen)}
+        >
+          <span>Facebook</span>
+          <span>{isFacebookOpen ? '-' : '+'}</span>
+        </div>
+        {isFacebookOpen && (
+          <ul className="dropdown-menu">
+            <li><NavLink to="/FacebookPoster">Facebook</NavLink></li>
+          </ul>
+        )}
+      </div>
+
+
+            <div className="dropdown">
+        <div
+          className="dropdown-header"
+          onClick={() => setIsIntegrationOpen(!isIntegrationOpen)}
+        >
+          <span>Integration</span>
+          <span>{isIntegrationOpen ? '-' : '+'}</span>
+        </div>
+        {isIntegrationOpen && (
+          <ul className="dropdown-menu">
+            <li><NavLink to="/StoreIntegrationForm">Integrations</NavLink></li>
+          </ul>
+        )}
+      </div>
+ 
     </div>
   );
 }

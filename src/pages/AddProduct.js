@@ -12,6 +12,9 @@ const AddProduct = () => {
   const [costPrice, setCostPrice] = useState("");
   const [sellingPrice, setSellingPrice] = useState("");
   const [stockQuantity, setStockQuantity] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+const [imageId, setImageId] = useState(null);
+
 
   // Fetch categories from Strapi
   useEffect(() => {
@@ -28,6 +31,30 @@ const AddProduct = () => {
     fetchCategories();
   }, []);
 
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+  
+    const formData = new FormData();
+    formData.append("files", file);
+  
+    try {
+      const res = await fetch("http://localhost:1337/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+  
+      const data = await res.json();
+      if (data && data[0]) {
+        setImageId(data[0].id); // Save image ID
+        console.log("✅ Image uploaded, ID:", data[0].id);
+      }
+    } catch (err) {
+      console.error("❌ Image upload failed:", err);
+    }
+  };
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -40,8 +67,10 @@ const AddProduct = () => {
         Cost_Price: parseFloat(costPrice),
         Selling_Price: parseFloat(sellingPrice),
         Stock_Quantity: parseInt(stockQuantity),
+        image: imageId, // Include image ID here
       },
     };
+    
 
     try {
       const response = await fetch("http://localhost:1337/api/products", {
@@ -86,6 +115,9 @@ const AddProduct = () => {
         <TextInput label="Cost Price" type="number" value={costPrice} onChange={(e) => setCostPrice(e.target.value)} required />
         <TextInput label="Selling Price" type="number" value={sellingPrice} onChange={(e) => setSellingPrice(e.target.value)} required />
         <TextInput label="Stock Quantity" type="number" value={stockQuantity} onChange={(e) => setStockQuantity(e.target.value)} required />
+        <label>Product Image</label>
+<input type="file" accept="image/*" onChange={handleImageChange} required />
+
 
         <button type="submit">Add Product</button>
       </form>

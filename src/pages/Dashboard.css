@@ -1,161 +1,193 @@
+/* Dashboard.css */
+
+/* Overall dashboard container */
 .dashboard {
-  padding: 20px;
-  background: #f9f9f9;
-}
-
-/* Stat Cards */
-.stats-container {
   display: flex;
-  gap: 20px;
-  margin-bottom: 40px;
-  flex-wrap: wrap; /* Ensures responsiveness */
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 2rem;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f8;
+  color: #2d3748;
+  min-height: 100vh;
 }
 
-.stat-card {
-  display: flex;
-  align-items: center;
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 250px;
-  box-sizing: border-box;
+/* Main chart container - large panel */
+.dashboard > .main-chart {
+  flex: 3 1 620px;
+  min-width: 320px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.07),
+    0 6px 6px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.3s ease;
 }
 
-.icon-circle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 10px;
-  color: white;
-  font-size: 1.5rem;
+.dashboard > .main-chart:hover {
+  box-shadow:
+    0 15px 30px rgba(0, 0, 0, 0.1),
+    0 8px 10px rgba(0, 0, 0, 0.07);
 }
 
-.stat-card h4 {
-  color: #555;
+/* Medium panel for side charts */
+.dashboard > .side-chart {
+  flex: 2 1 420px;
+  min-width: 320px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.8rem 2rem;
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.06),
+    0 5px 5px rgba(0, 0, 0, 0.03);
+  transition: box-shadow 0.3s ease;
+  overflow-y: auto;
+  max-height: 440px;
+}
+
+.dashboard > .side-chart:hover {
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.09),
+    0 7px 7px rgba(0, 0, 0, 0.05);
+}
+
+/* Small info cards */
+.dashboard > .info-card {
+  flex: 1 1 300px;
+  min-width: 280px;
+  max-height: 420px;
+  background: linear-gradient(145deg, #ffffff, #f0f4f8);
+  border-radius: 14px;
+  padding: 1.6rem 1.8rem;
+  box-shadow:
+    4px 4px 12px rgba(163, 177, 198, 0.2),
+    -4px -4px 12px rgba(255, 255, 255, 0.7);
+  overflow-y: auto;
+  color: #334e68;
+  transition: box-shadow 0.3s ease;
+}
+
+.dashboard > .info-card:hover {
+  box-shadow:
+    6px 6px 16px rgba(163, 177, 198, 0.3),
+    -6px -6px 16px rgba(255, 255, 255, 0.8);
+}
+
+/* Titles */
+.dashboard h3 {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #2a4365; /* Deep blue */
+  border-bottom: 3px solid #48bb78; /* green accent */
+  padding-bottom: 0.35rem;
+  letter-spacing: 0.03em;
+}
+
+/* Lists with no bullets */
+.dashboard ul {
+  list-style: none;
+  padding-left: 0;
   margin: 0;
 }
 
-.stat-card p {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-  margin: 5px 0 0;
+/* List items */
+.dashboard li {
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s ease;
+  border-radius: 6px;
 }
 
-/* Chart Container */
-.chart-container {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 40px;
+.dashboard li:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
-.chart-header {
+.dashboard li:hover {
+  background-color: #edf2f7;
+}
+
+/* Low Stock product style */
+.low-stock-item {
+  font-weight: 700;
+  color: #c53030; /* dark red */
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  flex-direction: column;
 }
 
-.chart-header select {
-  padding: 5px 10px;
-  border: 1px solid #ddd;
+.low-stock-qty {
+  font-weight: 500;
+  color: #9b2c2c;
+  font-size: 0.9rem;
+  margin-top: 3px;
+}
+
+/* Top products styles */
+.top-product-title {
+  font-weight: 700;
+  color: #1a202c;
+  font-size: 1.05rem;
+}
+
+.top-product-count {
+  color: #718096;
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+
+/* Recent orders */
+.recent-order {
+  font-size: 0.95rem;
+  color: #4a5568;
+  line-height: 1.3;
+  border-radius: 6px;
+}
+
+.recent-order strong {
+  color: #2d3748;
+}
+
+.recent-order div {
+  margin-bottom: 4px;
+}
+
+/* Scrollbar styles for info cards */
+.info-card::-webkit-scrollbar,
+.side-chart::-webkit-scrollbar {
+  width: 8px;
+}
+
+.info-card::-webkit-scrollbar-thumb,
+.side-chart::-webkit-scrollbar-thumb {
+  background-color: #a0aec0;
   border-radius: 4px;
-  font-size: 1rem;
 }
 
-/* Table Container */
-.table-container {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow-x: auto; /* Ensures table scrolls horizontally if needed */
+.info-card::-webkit-scrollbar-track,
+.side-chart::-webkit-scrollbar-track {
+  background: #e2e8f0;
 }
 
-.table-container table {
-  table-layout: fixed; /* Ensures fixed column width */
-  width: 100%;
-  border-collapse: collapse;
+/* Chart.js legend and tooltip styling */
+.chartjs-tooltip {
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
 }
 
-.table-container th,
-.table-container td {
-  text-align: left;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-.table-container th {
-  background: #f1f1f1;
-  font-weight: bold;
-}
-
-.table-container tr:nth-child(even) {
-  background: #f9f9f9;
-}
-
-/* Product Cell */
-.product-cell {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* Adds space between image and text */
-  flex-grow: 1; /* Allows text to grow and fill available space */
-}
-
-.product-cell img {
-  width: 50px;
-  height: 50px;
-  border-radius: 8px;
-  object-fit: cover; /* Ensures image aspect ratio is maintained */
-}
-
-.product-cell span {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis; /* Adds ellipsis for long names */
-}
-
-/* Adjusting the table column widths */
-.table-container td:nth-child(1) {
-  width: 10%;
-}
-
-.table-container td:nth-child(2) {
-  width: 60%; /* Adjusts product name column width */
-}
-
-.table-container td:nth-child(3) {
-  width: 30%; /* Adjusts price column width */
-}
-
-
-/* Responsive Fixes */
-@media (max-width: 768px) {
-  .stats-container {
+/* Responsive */
+@media (max-width: 920px) {
+  .dashboard {
     flex-direction: column;
-    gap: 10px;
+    padding: 1rem;
   }
 
-  .product-cell {
-    max-width: 200px;
-  }
-
-  .product-cell span {
-    max-width: 120px;
-  }
-
-  .table-container td:nth-child(2) {
-    width: 50%;
-  }
-
-  .table-container td:nth-child(3) {
-    width: 40%;
+  .dashboard > * {
+    flex: 1 1 100% !important;
+    min-width: 100% !important;
   }
 }

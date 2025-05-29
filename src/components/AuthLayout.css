@@ -1,0 +1,9 @@
+.auth-layout {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}

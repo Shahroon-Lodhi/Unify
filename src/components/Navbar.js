@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
-
+import ProfileModal from './ProfileModal';
 // Import image files
 import flagImage from "./Assets/Flag.png"; 
 import profilePic from "./Assets/Profile.jpg"; 
@@ -9,16 +9,24 @@ import profilePic from "./Assets/Profile.jpg";
 function Navbar() {
   // State to control visibility of the search bar
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   // Toggle search bar visibility
   const toggleSearchBar = () => setShowSearchBar((prev) => !prev);
+
+
+    const handleLogout = () => {
+    localStorage.removeItem("jwt");
+    navigate("/login");
+  };
 
   return (
     <div className="navbar">
       {/* Left Section */}
       <div className="navbar-left">
         <div className="logo">
-          <Link to="/" className="logo-link"> 
+          <Link to="/dashboard" className="logo-link"> 
             <span className="logo-text">
               Unify <span className="pos-text">TM</span>
             </span>
@@ -58,10 +66,18 @@ function Navbar() {
           <i className="fas fa-bell"></i>
           <span className="badge">4</span>
         </span>
-        <div className="profile">
-          <img src={profilePic} alt="Profile" className="profile-pic" />
-          <span className="status-dot"></span>
-        </div>
+
+<div className="profile" onClick={() => setShowModal(true)}>
+  <img src={profilePic} alt="Profile" className="profile-pic" />
+  <span className="status-dot"></span>
+</div>
+
+{showModal && (
+  <ProfileModal
+    onClose={() => setShowModal(false)}
+    onLogout={handleLogout}
+  />
+)}
       </div>
     </div>
   );

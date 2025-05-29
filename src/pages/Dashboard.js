@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
-import CountUp from 'react-countup'; // Import CountUp for number animations
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,132 +12,316 @@ import {
 } from 'chart.js';
 import './Dashboard.css';
 
-// Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Dashboard = () => {
-  const barData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [monthlySales, setMonthlySales] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
+  const [recentOrders, setRecentOrders] = useState([]);
+  const [lowStockProducts, setLowStockProducts] = useState([]);
+  const [products, setProducts] = useState([]); // all products fetched
+
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        // Fetch Orders
+        const ordersRes = await axios.get('http://localhost:1337/api/orders?sort=placed_at:desc&pagination[limit]=5');
+        const ordersData = ordersRes.data.data || [];
+        const formattedOrders = ordersData.map((item) => ({
+          id: item.id,
+          order_id: item.order_id,
+          total_amount: parseFloat(item.total_amount) || 0,
+          order_status: item.order_status,
+          placed_at: item.placed_at,
+          line_items: item.line_items.map((lineItem) => ({
+            title: lineItem.title || lineItem.name,
+            quantity: lineItem.quantity,
+          })),
+        }));
+        setOrders(formattedOrders);
+        setRecentOrders(formattedOrders.slice(0, 5)); // Show latest 5 orders
+        processSalesData(formattedOrders);
+
+        // Fetch Products
+        const productsResponse = await fetch('http://localhost:1337/api/products');
+        if (!productsResponse.ok) {
+          console.error('Failed to fetch products:', productsResponse.statusText);
+          setLowStockProducts([]);
+          setProducts([]);
+          return;
+        }
+
+        const productsJson = await productsResponse.json();
+        const productsData = productsJson.data || [];
+
+        const formattedProducts = productsData.map((item) => ({
+          Product_Name: item.Product_Name || 'Unnamed Product',
+          Product_SKU: item.Product_SKU || 'N/A',
+          Stock_Quantity: Number(item.Stock_Quantity) || 0,
+          Category: item.Category || 'Uncategorized',
+          Selling_Price: Number(item.Selling_Price) || 0,
+          Cost_Price: Number(item.Cost_Price) || 0,
+        }));
+
+        setProducts(formattedProducts);
+
+        const lowStockThreshold = 10;
+        const lowStock = formattedProducts.filter((p) => p.Stock_Quantity <= lowStockThreshold);
+        setLowStockProducts(lowStock);
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  function processSalesData(orders) {
+    const monthlyTotals = months.reduce((acc, month) => {
+      acc[month] = 0;
+      return acc;
+    }, {});
+
+    const productSales = {};
+
+    orders.forEach((order) => {
+      if (order.order_status?.toLowerCase() === 'paid') {
+        const date = new Date(order.placed_at);
+        const monthName = months[date.getMonth()];
+        monthlyTotals[monthName] += order.total_amount;
+
+        order.line_items.forEach((item) => {
+          productSales[item.title] = (productSales[item.title] || 0) + item.quantity;
+        });
+      }
+    });
+
+    const monthlySalesArr = months.map((m) => monthlyTotals[m]);
+
+    const top5Products = Object.entries(productSales)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([title, count]) => ({ title, count }));
+
+    setMonthlySales(monthlySalesArr);
+    setTopProducts(top5Products);
+  }
+
+  if (loading) return <div>Loading dashboard data...</div>;
+
+  // Sales chart data
+  const salesData = {
+    labels: months,
     datasets: [
       {
-        label: 'Sales',
-        data: [50, 45, 60, 70, 50, 45],
+        label: 'Monthly Sales (PKR)',
+        data: monthlySales.map((val) => Number(val.toFixed(2))),
         backgroundColor: '#4caf50',
-      },
-      {
-        label: 'Purchases',
-        data: [-30, -40, -50, -60, -30, -40],
-        backgroundColor: '#f44336',
       },
     ],
   };
 
-  const products = [
-    {
-      id: 1,
-      name: 'Apple Earpods',
-      price: '$891.2',
-      image: 'data:image/jpeg;base64,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',
-    },
-    {
-      id: 2,
-      name: 'iPhone 11',
-      price: '$668.51',
-      image: 'data:image/jpeg;base64,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',
-    },
-    {
-      id: 3,
-      name: 'Samsung',
-      price: '$522.29',
-      image: 'data:image/jpeg;base64,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',
-    },
-    {
-      id: 4,
-      name: 'MacBook Pro',
-      price: '$291.01',
-      image: 'data:image/jpeg;base64,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',
-    },
-  ];
+  // Profit Margin Data for Top Products (by sales)
+  const profitDataLabels = [];
+  const profitDataValues = [];
+
+  topProducts.forEach(({ title }) => {
+    const prod = products.find((p) => p.Product_Name === title);
+    if (prod && prod.Selling_Price > 0) {
+      const profitMargin = ((prod.Selling_Price - prod.Cost_Price) / prod.Selling_Price) * 100;
+      profitDataLabels.push(title);
+      profitDataValues.push(Number(profitMargin.toFixed(2)));
+    } else {
+      profitDataLabels.push(title);
+      profitDataValues.push(0);
+    }
+  });
+
+  const profitMarginData = {
+    labels: profitDataLabels,
+    datasets: [
+      {
+        label: 'Profit Margin (%)',
+        data: profitDataValues,
+        backgroundColor: profitDataValues.map((val) => (val < 0 ? '#e74c3c' : '#3498db')),
+      },
+    ],
+  };
 
   return (
-    <div className="dashboard">
-      {/* Stat Cards */}
-      <div className="stats-container">
-        <div className="stat-card">
-          <div className="icon-circle" style={{ backgroundColor: '#ffc107' }}>
-            <i className="fas fa-shopping-cart"></i>
-          </div>
-          <div>
-            <h4>Total Purchase Due</h4>
-            <p><CountUp start={0} end={307144} duration={2.5} separator="," /></p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="icon-circle" style={{ backgroundColor: '#8bc34a' }}>
-            <i className="fas fa-money-bill-alt"></i>
-          </div>
-          <div>
-            <h4>Total Sales Due</h4>
-            <p><CountUp start={0} end={4385} duration={2.5} separator="," /></p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="icon-circle" style={{ backgroundColor: '#03a9f4' }}>
-            <i className="fas fa-chart-line"></i>
-          </div>
-          <div>
-            <h4>Total Sale Amount</h4>
-            <p><CountUp start={0} end={385656.5} duration={2.5} separator="," decimal="." /></p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="icon-circle" style={{ backgroundColor: '#e91e63' }}>
-            <i className="fas fa-file-invoice"></i>
-          </div>
-          <div>
-            <h4>Sales Invoice</h4>
-            <p><CountUp start={0} end={105} duration={2.5} /></p>
-          </div>
-        </div>
+    <div className="dashboard" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+      {/* Monthly Sales Chart */}
+      <div style={{ flex: '3 1 600px', minWidth: '300px' }}>
+        <h3>Monthly Sales</h3>
+        <Bar data={salesData} options={{ responsive: true }} />
       </div>
 
-      {/* Bar Chart */}
-      <div className="chart-container">
-        <div className="chart-header">
-          <h4>Purchase & Sales</h4>
-          <select>
-            <option>2022</option>
-            <option>2021</option>
-            <option>2020</option>
-          </select>
-        </div>
-        <Bar data={barData} options={{ responsive: true }} />
+      {/* Profit Margin Chart */}
+      <div style={{ flex: '2 1 400px', minWidth: '300px', background: '#f0f4f8', padding: '1rem', borderRadius: '8px', boxShadow: '0 0 8px rgba(0,0,0,0.1)' }}>
+        <h3>💰 Profit Margins (Top 5 Products)</h3>
+        {profitDataLabels.length > 0 ? (
+          <Bar data={profitMarginData} options={{
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                ticks: {
+                  callback: function(value) {
+                    return value + '%';
+                  },
+                },
+                title: {
+                  display: true,
+                  text: 'Profit Margin (%)',
+                },
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Product',
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return context.parsed.y + '% profit margin';
+                  },
+                },
+              },
+            },
+          }} />
+        ) : (
+          <p>No profit margin data available.</p>
+        )}
       </div>
 
-      {/* Table */}
-      <div className="table-container">
-        <h4>Recently Added Products</h4>
-        <table>
-          <thead>
-            <tr>
-              <th>Sno</th>
-              <th>Product</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product, index) => (
-              <tr key={product.id}>
-                <td>{index + 1}</td>
-                <td className="product-cell">
-                  <img src={product.image} alt={product.name} />
-                  {product.name}
-                </td>
-                <td>{product.price}</td>
-              </tr>
+      {/* Top Selling Products */}
+      <div
+        style={{
+          flex: '1 1 300px',
+          background: '#f7f7f7',
+          padding: '1rem',
+          borderRadius: '8px',
+          boxShadow: '0 0 8px rgba(0,0,0,0.1)',
+          height: 'fit-content',
+        }}
+      >
+        <h3>🔥 Top Selling Products</h3>
+        {topProducts.length > 0 ? (
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {topProducts.map(({ title, count }) => (
+              <li
+                key={title}
+                style={{
+                  marginBottom: '1rem',
+                  borderBottom: '1px solid #ddd',
+                  paddingBottom: '0.5rem',
+                }}
+              >
+                <strong>{title}</strong>
+                <div style={{ color: '#555' }}>Units Sold: {count}</div>
+              </li>
             ))}
-          </tbody>
-        </table>
+          </ul>
+        ) : (
+          <p>No sales data available.</p>
+        )}
+      </div>
+
+      {/* Recent Orders */}
+      <div
+        style={{
+          flex: '2 1 500px',
+          background: '#e8f0fe',
+          padding: '1rem',
+          borderRadius: '8px',
+          boxShadow: '0 0 8px rgba(0,0,0,0.1)',
+          maxHeight: '400px',
+          overflowY: 'auto',
+        }}
+      >
+        <h3>📦 Recent Orders</h3>
+        {recentOrders.length > 0 ? (
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+            {recentOrders.map((order) => (
+              <li
+                key={order.id}
+                style={{
+                  marginBottom: '1rem',
+                  borderBottom: '1px solid #c3d0fc',
+                  paddingBottom: '0.5rem',
+                }}
+              >
+                <div>
+                  <strong>Order ID:</strong> {order.order_id}
+                </div>
+                <div>
+                  <strong>Status:</strong> {order.order_status}
+                </div>
+                <div>
+                  <strong>Placed At:</strong> {new Date(order.placed_at).toLocaleString()}
+                </div>
+                <div>
+                  <strong>Total:</strong> PKR {order.total_amount.toFixed(2)}
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No recent orders available.</p>
+        )}
+      </div>
+
+      {/* Low Stock Alerts */}
+      <div
+        style={{
+          background: '#fff3f3',
+          padding: '1rem',
+          borderRadius: '8px',
+          boxShadow: '0 0 8px rgba(0,0,0,0.1)',
+          minWidth: '250px',
+          maxHeight: '400px',
+          overflowY: 'auto',
+          flex: '1 1 250px',
+          color: '#a94442',
+        }}
+      >
+        <h3>⚠️ Low Stock Alerts</h3>
+        {lowStockProducts.length > 0 ? (
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+            {lowStockProducts.map(({ Product_Name, Product_SKU, Stock_Quantity }) => (
+              <li
+                key={Product_SKU}
+                style={{
+                  marginBottom: '1rem',
+                  borderBottom: '1px solid #f1c0c0',
+                  paddingBottom: '0.5rem',
+                  fontWeight: '600',
+                }}
+              >
+                <div>{Product_Name} (SKU: {Product_SKU})</div>
+                <div style={{ fontWeight: 'normal', color: '#a94442' }}>
+                  Stock Left: {Stock_Quantity}
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No low stock products.</p>
+        )}
       </div>
     </div>
   );

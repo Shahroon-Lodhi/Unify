@@ -1,0 +1,76 @@
+/* Container */
+.product-details {
+  padding: 32px;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+/* Header */
+.product-details .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.product-details .header h2 {
+  font-size: 24px;
+  color: #1f2937;
+  margin: 0;
+}
+
+.back-button {
+  background-color: #ff7f00;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.back-button:hover {
+  background-color: #e67300;
+}
+
+/* Card Layout */
+.card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Fields */
+.field {
+  font-size: 15px;
+  color: #374151;
+}
+
+.label {
+  font-weight: 600;
+  color: #1f2937;
+  margin-right: 8px;
+}
+
+/* Image Styling */
+.image-field img {
+  margin-top: 8px;
+  max-width: 200px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Loading and error state */
+.loading,
+.error {
+  font-size: 16px;
+  text-align: center;
+  color: #6b7280;
+  margin-top: 80px;
+}

@@ -1,7 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import Navbar from './components/Navbar'; // Import the Navbar component
-import Sidebar from './components/Sidebar';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import AuthLayout from './components/AuthLayout';
+import DashboardLayout from './components/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import AddProduct from './pages/AddProduct';
 import AddCategory from './pages/AddCategory';
@@ -16,61 +16,60 @@ import ImportProducts from './pages/ImportProducts';
 import SupplierList from './pages/SupplierList';
 import AddSupplier from './pages/AddSupplier';
 import AddQuotation from './pages/AddQuotation';
-import LoadingSpinner from './components/LoadingSpinner'; // Add this import
-
+import ProductDetails from './pages/ProductDetails';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import ProtectedRoute from './components/ProtectedRoute';
+import { Navigate } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
+import StoreIntegrationForm from './pages/StoreIntegrationForm.tsx'
+import Orders from './pages/orders.js';
+import FacebookPoster from './pages/FacebookPoster.js';
 import "./App.css";
 
-function AppContent() {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const location = useLocation();
-
-  React.useEffect(() => {
-    setIsLoading(true);
-    // Add a small delay to show the loading state
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [location]);
-
-  return (
-    <div className="app-container">
-      <Navbar />
-      <div className="app-wrapper">
-        <Sidebar />
-        <main className="main-container">
-          {isLoading && <LoadingSpinner />}
-          <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/products" element={<AddProduct />} />
-          <Route path="/categories" element={<AddCategory />} />
-          <Route path="/Subcategories" element={<AddSubCategory />} />
-          <Route path="/Brands" element={<AddBrand />} />
-          <Route path="/ProductList" element={<ProductList />} />
-          <Route path="/CategoryList" element={<CategoryList />} />
-          <Route path="/BrandList" element={<BrandList />} />
-          <Route path="/SubCategoryList" element={<SubCategoryList />} />
-          <Route path="/PrintBarcode" element={<PrintBarcode />} />
-          <Route path="/ImportProducts" element={<ImportProducts />} />
-          <Route path="/SupplierList" element={<SupplierList />} />
-          <Route path="/AddSupplier" element={<AddSupplier />} />
-          <Route path="/AddQuotation" element={<AddQuotation />} />
-
-
-
-        </Routes>
-        </main>
-        </div>
-      </div>
-  );
-}
 
 function App() {
+
   return (
     <Router>
-      <AppContent />
+      <Routes>
+
+        {/* Public Pages */}
+        <Route element={<AuthLayout />}>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Route>
+
+        {/* Protected Dashboard */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/products" element={<ProtectedRoute><AddProduct /></ProtectedRoute>} />
+          <Route path="/categories" element={<ProtectedRoute><AddCategory /></ProtectedRoute>} />
+          <Route path="/Subcategories" element={<ProtectedRoute><AddSubCategory /></ProtectedRoute>} />
+          <Route path="/Brands" element={<ProtectedRoute><AddBrand /></ProtectedRoute>} />
+          <Route path="/ProductList" element={<ProtectedRoute><ProductList /></ProtectedRoute>} />
+          <Route path="/CategoryList" element={<ProtectedRoute><CategoryList /></ProtectedRoute>} />
+          <Route path="/BrandList" element={<ProtectedRoute><BrandList /></ProtectedRoute>} />
+          <Route path="/SubCategoryList" element={<ProtectedRoute><SubCategoryList /></ProtectedRoute>} />
+          <Route path="/PrintBarcode" element={<ProtectedRoute><PrintBarcode /></ProtectedRoute>} />
+          <Route path="/ImportProducts" element={<ProtectedRoute><ImportProducts /></ProtectedRoute>} />
+          <Route path="/SupplierList" element={<ProtectedRoute><SupplierList /></ProtectedRoute>} />
+          <Route path="/AddSupplier" element={<ProtectedRoute><AddSupplier /></ProtectedRoute>} />
+          <Route path="/AddQuotation" element={<ProtectedRoute><AddQuotation /></ProtectedRoute>} />
+          <Route path="/products/sku/:sku" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/StoreIntegrationForm" element={<StoreIntegrationForm />} />
+          <Route path="/FacebookPoster" element={<FacebookPoster/>} />
+          
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+
+      </Routes>
     </Router>
   );
 }
+
+
 
 export default App;
