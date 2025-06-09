@@ -20,7 +20,7 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:1337/api/auth/local/register', {
+      const res = await axios.post('https://strapi-backend-production-63b5.up.railway.app/api/auth/local/register', {
         username,
         email,
         password,

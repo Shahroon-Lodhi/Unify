@@ -10,7 +10,7 @@ function ProductDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:1337/api/products?populate=Image&filters[Product_SKU][$eq]=${sku}`)
+    fetch(`https://strapi-backend-production-63b5.up.railway.app/api/products?populate=Image&filters[Product_SKU][$eq]=${sku}`)
       .then((res) => res.json())
       .then((data) => {
         if (data?.data?.length > 0) {
@@ -51,7 +51,7 @@ function ProductDetails() {
         {product.Image?.data?.attributes?.url && (
           <div className="field image-field">
             <span className="label">Image:</span>
-            <img src={`http://localhost:1337${product.Image.data.attributes.url}`} alt={product.Product_Name} />
+            <img src={`https://strapi-backend-production-63b5.up.railway.app${product.Image.data.attributes.url}`} alt={product.Product_Name} />
           </div>
         )}
       </div>

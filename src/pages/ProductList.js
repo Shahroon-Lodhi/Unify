@@ -15,7 +15,7 @@ function ProductList() {
 
   useEffect(() => {
     // Fetch products
-    fetch("http://localhost:1337/api/products")
+    fetch("https://strapi-backend-production-63b5.up.railway.app/api/products")
       .then((response) => response.json())
       .then((data) => {
         const productData = data.data.map((item) => ({
@@ -27,7 +27,7 @@ function ProductList() {
       .catch((error) => console.error("Error fetching products:", error));
     
     // Fetch categories
-    fetch("http://localhost:1337/api/categories")
+    fetch("https://strapi-backend-production-63b5.up.railway.app/api/categories")
       .then((response) => response.json())
       .then((data) => {
         setCategories(data.data.map((cat) => cat.name)); // Extract category names
@@ -58,14 +58,14 @@ function ProductList() {
   };
 
   const handleDelete = (productId, sku) => {
-    fetch(`http://localhost:1337/api/products/${productId}`, {
+    fetch(`https://strapi-backend-production-63b5.up.railway.app/api/products/${productId}`, {
       method: 'DELETE',
     })
       .then((response) => {
         if (response.ok) {
           setProducts(products.filter((product) => product.id !== productId));
 
-          fetch(`http://localhost:1337/api/products/${productId}/delete`, {
+          fetch(`https://strapi-backend-production-63b5.up.railway.app/api/products/${productId}/delete`, {
             method: 'POST',
           })
             .then((deleteResponse) => {
@@ -92,7 +92,7 @@ function ProductList() {
   };
 
   const handleUpdate = () => {
-    fetch(`http://localhost:1337/api/products/${editingProduct.id}`, {
+    fetch(`https://strapi-backend-production-63b5.up.railway.app/api/products/${editingProduct.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -305,7 +305,7 @@ function ProductList() {
                   {/* If product has an image, display it */}
                   {viewingProduct.image ? (
                     <img 
-                      src={`http://localhost:1337${viewingProduct.image.url}`} 
+                      src={`https://strapi-backend-production-63b5.up.railway.app${viewingProduct.image.url}`} 
                       alt={viewingProduct.Product_Name} 
                       className="product-image"
                     />

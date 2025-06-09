@@ -29,7 +29,7 @@ const Dashboard = () => {
     async function fetchData() {
       try {
         // Fetch Orders
-        const ordersRes = await axios.get('http://localhost:1337/api/orders?sort=placed_at:desc&pagination[limit]=5');
+        const ordersRes = await axios.get('https://strapi-backend-production-63b5.up.railway.app/api/orders?sort=placed_at:desc&pagination[limit]=5');
         const ordersData = ordersRes.data.data || [];
         const formattedOrders = ordersData.map((item) => ({
           id: item.id,
@@ -47,7 +47,7 @@ const Dashboard = () => {
         processSalesData(formattedOrders);
 
         // Fetch Products
-        const productsResponse = await fetch('http://localhost:1337/api/products');
+        const productsResponse = await fetch('https://strapi-backend-production-63b5.up.railway.app/api/products');
         if (!productsResponse.ok) {
           console.error('Failed to fetch products:', productsResponse.statusText);
           setLowStockProducts([]);

@@ -21,7 +21,7 @@ const AddCategory = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:1337/api/categories', { data: newCategory }); // Adjust URL if needed
+      const response = await axios.post('https://strapi-backend-production-63b5.up.railway.app/api/categories', { data: newCategory }); // Adjust URL if needed
       console.log('Category added:', response.data);
       setSuccessMessage('Category added successfully!');
       // Reset form fields

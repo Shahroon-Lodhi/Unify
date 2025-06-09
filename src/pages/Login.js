@@ -20,7 +20,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:1337/api/auth/local', {
+      const res = await axios.post('https://strapi-backend-production-63b5.up.railway.app/api/auth/local', {
         identifier,
         password,
       });

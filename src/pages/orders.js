@@ -18,7 +18,7 @@ const Orders = () => {
   const fetchOrders = () => {
     setLoading(true);
     axios
-      .get('http://localhost:1337/api/orders?sort=placed_at:desc')
+      .get('https://strapi-backend-production-63b5.up.railway.app/api/orders?sort=placed_at:desc')
       .then((res) => {
         const data = res.data.data || [];
         const formattedOrders = data.map((item) => ({
@@ -75,7 +75,7 @@ const Orders = () => {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`http://localhost:1337/api/orders/${strapiId}`);
+      await axios.delete(`https://strapi-backend-production-63b5.up.railway.app/api/orders/${strapiId}`);
       const updatedOrders = orders.filter((order) => order.id !== strapiId);
       setOrders(updatedOrders);
       updateHotProducts(updatedOrders);

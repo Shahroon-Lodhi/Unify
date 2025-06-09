@@ -20,7 +20,7 @@ const [imageId, setImageId] = useState(null);
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:1337/api/categories");
+        const response = await fetch("https://strapi-backend-production-63b5.up.railway.app/api/categories");
         const data = await response.json();
         setCategories(data.data.map((cat) => cat.name)); // Extract category names
       } catch (error) {
@@ -39,7 +39,7 @@ const [imageId, setImageId] = useState(null);
     formData.append("files", file);
   
     try {
-      const res = await fetch("http://localhost:1337/api/upload", {
+      const res = await fetch("https://strapi-backend-production-63b5.up.railway.app/api/upload", {
         method: "POST",
         body: formData,
       });
@@ -73,7 +73,7 @@ const [imageId, setImageId] = useState(null);
     
 
     try {
-      const response = await fetch("http://localhost:1337/api/products", {
+      const response = await fetch("https://strapi-backend-production-63b5.up.railway.app/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -13,7 +13,7 @@ function CategoryList() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:1337/api/categories");
+        const response = await axios.get("https://strapi-backend-production-63b5.up.railway.app/api/categories");
         console.log("API Response:", response.data); // Check the full response
         setCategories(response.data.data);
       } catch (error) {

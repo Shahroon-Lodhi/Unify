@@ -8,7 +8,7 @@ const useOrdersData = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:1337/api/orders?sort=placed_at:desc')
+      .get('https://strapi-backend-production-63b5.up.railway.app/api/orders?sort=placed_at:desc')
       .then((res) => {
         const data = res.data.data || [];
         const formattedOrders = data.map((item) => ({
