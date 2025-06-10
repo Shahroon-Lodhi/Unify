@@ -67,7 +67,7 @@ const [imageId, setImageId] = useState(null);
         Cost_Price: parseFloat(costPrice),
         Selling_Price: parseFloat(sellingPrice),
         Stock_Quantity: parseInt(stockQuantity),
-image: [imageId],
+        image: imageId, // Include image ID here
       },
     };
     
